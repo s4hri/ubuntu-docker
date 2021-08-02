@@ -137,3 +137,4 @@ endif
 distro: build
 	@echo "Pushing docker image ${PJT_DOCKER_IMAGE} on dockerhub"
 	docker push ${PJT_DOCKER_IMAGE}
+	docker push iitschri/${PROJECT_NAME}-docker
