@@ -111,7 +111,7 @@ setup:
 
 init: setup
 	echo "Building project docker image ${PJT_DOCKER_IMAGE}"; \
-	docker build docker -t ${PJT_DOCKER_IMAGE} --build-arg DOCKER_SRC=${DOCKER_SRC} ${BUILD_ARGS} --no-cache;
+	docker build docker -t ${PJT_DOCKER_IMAGE} --build-arg DOCKER_SRC=${DOCKER_SRC} ${BUILD_ARGS};
 
 
 build:

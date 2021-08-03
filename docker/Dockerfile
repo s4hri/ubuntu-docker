@@ -33,7 +33,7 @@ RUN apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
 
 RUN apt-get install -y pulseaudio-utils libdlib-dev libsqlite3-dev terminator telnet;
 
-RUN apt-get install -y udev;
+RUN apt-get install -y udev libftdi1 libusb-1.0-0-dev;
 
 RUN useradd -ms /bin/bash docky
 RUN usermod -a -G root,sudo,audio,video,input docky
@@ -41,8 +41,11 @@ RUN echo 'docky:docky' | chpasswd
 RUN echo 'root:root' | chpasswd
 
 WORKDIR /home/docky
+COPY pulse-client.conf /etc/pulse/client.conf
 
 USER docky
 
 RUN cd /home/docky &&\
     git clone https://github.com/s4hri/docker-tests;
+
+ENV PATH=${PATH}:/home/docky/.local/bin
