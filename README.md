@@ -1,3 +1,3 @@
 # ubuntu-docker
 
-  make run
+  cd .docker && make run

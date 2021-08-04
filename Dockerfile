@@ -1,7 +1,7 @@
 ARG DOCKER_SRC
 
 FROM $DOCKER_SRC
-LABEL maintainer="Davide De Tommaso <dtmdvd@gmail.com>"
+LABEL maintainer="Davide De Tommaso <davide.detommaso@iit.it>"
 
 ENV TZ=Europe/Rome
 ENV DEBIAN_FRONTEND noninteractive
@@ -29,11 +29,8 @@ RUN apt-get install -y apt-utils x11-apps gnupg swig alsa-utils \
 RUN apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-tools \
-    gstreamer1.0-plugins-ugly;
-
-RUN apt-get install -y pulseaudio-utils libdlib-dev libsqlite3-dev terminator telnet;
-
-RUN apt-get install -y udev libftdi1 libusb-1.0-0-dev;
+    gstreamer1.0-plugins-ugly pulseaudio-utils libdlib-dev libsqlite3-dev \
+    libftdi1 libusb-1.0-0-dev terminator telnet gnome-terminal;
 
 RUN useradd -ms /bin/bash docky
 RUN usermod -a -G root,sudo,audio,video,input docky
@@ -49,3 +46,5 @@ RUN cd /home/docky &&\
     git clone https://github.com/s4hri/docker-tests;
 
 ENV PATH=${PATH}:/home/docky/.local/bin
+
+RUN mkdir /home/docky/.config && mkdir /home/docky/.config/terminator && touch mkdir /home/docky/.config/terminator/config

@@ -29,7 +29,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: write version
-        run: echo RELEASE_TAG=${{ github.event.release.tag_name }} > .version
+        run: echo RELEASE_TAG=${{ github.event.release.tag_name }} > .docker/.version
 
       - name: commit files
         run: |
@@ -44,4 +44,4 @@ jobs:
           branch: refs/heads/master
 
       - name: init build
-        run: make init build distro
+        run: cd .docker && make init build distro
