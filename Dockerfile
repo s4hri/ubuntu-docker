@@ -46,4 +46,4 @@ RUN cd /home/docky &&\
 
 ENV PATH=${PATH}:/home/docky/.local/bin
 
-RUN mkdir /home/docky/.config && mkdir /home/docky/.config/terminator && touch mkdir /home/docky/.config/terminator/config
+RUN mkdir /home/docky/.config && mkdir /home/docky/.config/terminator && touch /home/docky/.config/terminator/config
