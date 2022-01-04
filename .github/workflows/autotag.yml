@@ -10,7 +10,11 @@ jobs:
 
     steps:
       - name: Set current tag name
-        run: echo "TAGNAME=$(date +'v%Y.%m')" >> $GITHUB_ENV
+        uses: actions/github-script@v5
+        id: set-tagname
+        with:
+          script: return "$(date +'v%Y.%m')"
+          result-encoding: string
 
       - name: Create tag
         uses: actions/github-script@v5
@@ -19,6 +23,6 @@ jobs:
                   github.rest.git.createRef({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  ref: 'refs/tags/$TAGNAME',
+                  ref: 'refs/tags/${{steps.set-tagname.outputs.result}}',
                   sha: context.sha
                   })
