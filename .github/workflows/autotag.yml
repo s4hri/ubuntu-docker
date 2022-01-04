@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Set current tag name
-        run: echo "TAGNAME::$(date +'v%Y.%m')" >> $GITHUB_ENV
+        run: echo "TAGNAME=$(date +'v%Y.%m')" >> $GITHUB_ENV
 
       - name: Create tag
         uses: actions/github-script@v5
