@@ -13,7 +13,7 @@ jobs:
         uses: actions/github-script@v5
         id: set-tagname
         with:
-          script: return "$(date +'v%Y.%m')"
+          script: return $(date +'v%Y.%m')
           result-encoding: string
 
       - name: Create tag
