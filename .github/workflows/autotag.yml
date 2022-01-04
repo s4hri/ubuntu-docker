@@ -9,20 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set current tag name
-        uses: actions/github-script@v5
-        id: set-tagname
-        with:
-          script: return $(date +'v%Y.%m')
-          result-encoding: string
-
-      - name: Create tag
-        uses: actions/github-script@v5
-        with:
+     - name: set tag name
+       id: tag
+       run: echo "::set-output name=tag::$(date +'v%Y.%m')"
+        
+     - name: Create tag
+       uses: actions/github-script@v5
+       with:
           script: |
                   github.rest.git.createRef({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  ref: 'refs/tags/${{steps.set-tagname.outputs.result}}',
+                  ref: 'refs/tags/${{ steps.tag.outputs.tag }}',
                   sha: context.sha
                   })
