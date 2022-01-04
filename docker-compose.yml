@@ -3,9 +3,14 @@ version: '3.8'
 services:
 
   main:
-    image: ${LOCAL_DOCKER_IMAGE}
+    image: ${DOCKER_DOMAIN}/${PROJECT_NAME}-docker:${RELEASE}-${USER}.local
+
+    extends:
+      file: .dockyman/compose/common.yml
+      service: common
 
     environment:
         - PROJECT_NAME=${PROJECT_NAME}
+        - RELEASE=${RELEASE}
 
-    command: terminator
+    command: ["/bin/bash", "-c", "startup.sh"]

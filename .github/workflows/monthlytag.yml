@@ -1,0 +1,21 @@
+name: AUTO TAG
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+                  github.rest.git.createRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: 'refs/tags/<tagname>',
+                  sha: context.sha
+                  })

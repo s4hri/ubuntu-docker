@@ -31,19 +31,3 @@ RUN apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-tools \
     gstreamer1.0-plugins-ugly pulseaudio-utils libdlib-dev libsqlite3-dev \
     libftdi1 libusb-1.0-0-dev terminator telnet gnome-terminal protobuf-compiler sudo;
-
-RUN useradd -ms /bin/bash docky
-RUN echo 'docky:docky' | chpasswd
-RUN echo 'root:root' | chpasswd
-
-WORKDIR /home/docky
-COPY pulse-client.conf /etc/pulse/client.conf
-
-USER docky
-
-RUN cd /home/docky &&\
-    git clone https://github.com/s4hri/docker-tests;
-
-ENV PATH=${PATH}:/home/docky/.local/bin
-
-RUN mkdir /home/docky/.config && mkdir /home/docky/.config/terminator && touch /home/docky/.config/terminator/config
