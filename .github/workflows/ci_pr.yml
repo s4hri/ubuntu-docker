@@ -18,14 +18,14 @@ jobs:
        id: tag
        run: echo "::set-output name=tag::$(date +'v%Y.%m')"
 
-     - name: checkout repo
-       uses: actions/checkout@v2
+     - uses: actions/checkout@v2
+       with:
+         fetch-depth: 0
 
      - name: Create Pull Request
        uses: peter-evans/create-pull-request@v3
        with:
-        token: ${{ secrets.PAT }}
-        commit-message: update release
-        title: Update release
-        body: Updating version ${{ steps.tag.outputs.tag }}
-        branch: ${{ steps.tag.outputs.tag }}
+         commit-message: update release
+         title: Update release
+         body: Updating version ${{ steps.tag.outputs.tag }}
+         branch: ${{ steps.tag.outputs.tag }}
