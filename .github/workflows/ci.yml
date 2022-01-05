@@ -41,9 +41,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-     - name: build
-       run: bash .dockyman/build.sh
-
      - name: Create tag
        uses: actions/github-script@v5
        with:
@@ -57,10 +54,9 @@ jobs:
      - name: Create Pull Request
        uses: peter-evans/create-pull-request@v3
        with:
+        token: ${{ secrets.PAT }}
         commit-message: update release
         title: Update release
         body: Updating version ${{ steps.tag.outputs.tag }}
         branch: ${{ steps.tag.outputs.tag }}
 
-     - name: push
-       run: bash .dockyman/build.sh distro
