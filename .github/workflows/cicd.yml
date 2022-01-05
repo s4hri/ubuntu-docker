@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI - TAG
+name: CI/CD
 
 on:
   schedule:
@@ -22,24 +22,23 @@ jobs:
 
      - name: change release version
        run: |
-            git pull origin
-            git branch ${{ steps.tag.outputs.tag }}
-            git checkout ${{ steps.tag.outputs.tag }}
+            git pull origin master
+            git checkout master
             sed -i -r 's/^(RELEASE=).*/\1${{ steps.tag.outputs.tag }}/' .env
+
+     - name: build
+       run: bash .dockyman/build.sh
+
+     - name: push release version
+       run: |
             git config --global user.name 'S4HRI bot'
             git config --global user.email 's4hri-bot@users.noreply.github.com'
             git remote set-url --push origin https://github.com/${{github.repository}}
             git add .env
             git commit -m "Auto versioning"
-            git push origin ${{ steps.tag.outputs.tag }}
+            git push origin master
        env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-     - name: Log in to Docker Hub
-       uses: docker/login-action@v1
-       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
 
      - name: Create tag
        uses: actions/github-script@v5
@@ -51,3 +50,17 @@ jobs:
                 ref: 'refs/tags/${{ steps.tag.outputs.tag }}',
                 sha: context.sha
                 })
+
+     - uses: ncipollo/release-action@v1
+       with:
+         token: ${{ secrets.GITHUB_TOKEN }}
+         name: ${{ steps.tag.outputs.tag }}
+
+     - name: Log in to Docker Hub
+       uses: docker/login-action@v1
+       with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+     - name: push
+       run: bash .dockyman/build.sh distro
