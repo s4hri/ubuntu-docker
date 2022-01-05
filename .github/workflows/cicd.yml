@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-     - name: set tag name
+     - name: Tag name
        id: tag
        run: echo "::set-output name=tag::$(date +'v%Y.%m')"
 
-     - name: checkout repo
+     - name: Checkout Repo
        uses: actions/checkout@v2
 
      - name: Log in to Docker Hub
@@ -26,28 +26,29 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-     - name: build
+     - name: Build and Push 
        run: |
             git pull origin master
             git checkout master
             sed -i -r 's/^(RELEASE=).*/\1${{ steps.tag.outputs.tag }}/' .env
             bash .dockyman/build.sh
+            bash .dockyman/build.sh distro
        env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-     - name: commit files
+     - name: Commit Files
        run: |
             git config --global user.name 'S4HRI bot'
             git config --global user.email 's4hri-bot@users.noreply.github.com'
             git commit -m "Auto versioning" -a
 
-     - name: push changes
+     - name: Push Changes
        uses: ad-m/github-push-action@master
        with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          branch: refs/heads/master
 
-     - name: Create tag
+     - name: Create Tag
        uses: actions/github-script@v5
        with:
         script: |
@@ -64,6 +65,3 @@ jobs:
           tag: ${{ steps.tag.outputs.tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ steps.tag.outputs.tag }}
-
-     - name: docker push
-       run: bash .dockyman/build.sh distro
