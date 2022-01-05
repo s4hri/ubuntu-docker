@@ -22,14 +22,14 @@ jobs:
 
      - name: change release version
        run: |
-            git pull origin master
-            git checkout master
+            git pull origin
             git branch ${{ steps.tag.outputs.tag }}
             git checkout ${{ steps.tag.outputs.tag }}
             sed -i -r 's/^(RELEASE=).*/\1${{ steps.tag.outputs.tag }}/' .env
             git config --global user.name 'S4HRI bot'
             git config --global user.email 's4hri-bot@users.noreply.github.com'
             git remote set-url --push origin https://github.com/${{github.repository}}
+            git add .env
             git commit -m "Auto versioning" --amend --reset-author
             git push origin ${{ steps.tag.outputs.tag }}
        env:
