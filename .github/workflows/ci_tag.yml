@@ -30,7 +30,7 @@ jobs:
             git config --global user.email 's4hri-bot@users.noreply.github.com'
             git remote set-url --push origin https://github.com/${{github.repository}}
             git add .env
-            git commit -m "Auto versioning" --amend --reset-author
+            git commit -m "Auto versioning"
             git push origin ${{ steps.tag.outputs.tag }}
        env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
