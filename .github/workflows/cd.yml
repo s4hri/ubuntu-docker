@@ -1,0 +1,17 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v2
+
+    - name: push
+      run: bash .dockyman/build.sh distro
