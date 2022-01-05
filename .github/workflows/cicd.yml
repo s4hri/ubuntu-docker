@@ -32,15 +32,20 @@ jobs:
             git checkout master
             sed -i -r 's/^(RELEASE=).*/\1${{ steps.tag.outputs.tag }}/' .env
             bash .dockyman/build.sh
-            git config --global user.name 'S4HRI bot'
-            git config --global user.email 's4hri-bot@users.noreply.github.com'
-            git remote set-url --push origin https://github.com/${{github.repository}}
-            git add .env
-            git commit -m "Auto versioning"
-            git push origin master
-            bash .dockyman/build.sh distro
        env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: commit files
+        run: |
+            git config --global user.name 'S4HRI bot'
+            git config --global user.email 's4hri-bot@users.noreply.github.com'
+            git commit -m "Auto versioning" -a
+
+     - name: push changes
+       uses: ad-m/github-push-action@master
+       with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         branch: refs/heads/master
 
      - name: Create tag
        uses: actions/github-script@v5
@@ -57,3 +62,6 @@ jobs:
        with:
          token: ${{ secrets.GITHUB_TOKEN }}
          name: ${{ steps.tag.outputs.tag }}
+
+     - name: docker push
+       run: bash .dockyman/build.sh distro
