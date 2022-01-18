@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   main:
-    image: ${DOCKER_DOMAIN}/${PROJECT_NAME}-docker:${RELEASE}-${USER}.local
+    image: ${DOCKER_DOMAIN}/${PROJECT_NAME}-docker:${RELEASE}.local
 
     extends:
       file: .dockyman/compose/common.yml

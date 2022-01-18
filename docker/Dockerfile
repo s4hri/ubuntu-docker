@@ -31,3 +31,12 @@ RUN apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-tools \
     gstreamer1.0-plugins-ugly pulseaudio-utils libdlib-dev libsqlite3-dev \
     libftdi1 libusb-1.0-0-dev terminator telnet gnome-terminal protobuf-compiler sudo;
+
+RUN apt-get install -y curl;
+
+RUN useradd -ms /bin/bash docky
+RUN passwd -d docky
+RUN usermod -a -G root,sudo docky
+
+RUN git config --global user.name docky bot && \
+    git config --global user.email novalid@mail.com

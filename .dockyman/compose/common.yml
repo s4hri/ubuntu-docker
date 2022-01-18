@@ -37,9 +37,5 @@ services:
         target: /run/pulse/cookie
 
       - type: bind
-        source: ../../workdir
-        target: /workdir
-
-      - /etc/passwd:/etc/passwd:ro
-
-      - /etc/shadow:/etc/shadow:ro
+        source: ../../shared
+        target: ${WORKDIR}/shared

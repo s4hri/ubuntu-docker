@@ -1,9 +1,12 @@
 LOCAL_USER_ID := $(shell id -u)
+DOCKER_USERNAME := docky
 GROUP_AUDIO := $(shell getent group audio | cut -d: -f3)
 GROUP_VIDEO := $(shell getent group video | cut -d: -f3)
 GROUP_INPUT := $(shell getent group input | cut -d: -f3)
 
+
 export LOCAL_USER_ID
+export DOCKER_USERNAME
 export GROUP_AUDIO
 export GROUP_VIDEO
 export GROUP_INPUT
@@ -15,9 +18,9 @@ SHELL := /bin/bash
 PJT_DOCKER_IMAGE := ${DOCKER_DOMAIN}/${PROJECT_NAME}-docker:${RELEASE}
 export PJT_DOCKER_IMAGE
 
-CONTAINER_NAME := ${PROJECT_NAME}.${RELEASE}-${USER}.local
+CONTAINER_NAME := ${PROJECT_NAME}.${RELEASE}.local
 export CONTAINER_NAME
-LOCAL_DOCKER_IMAGE := ${PJT_DOCKER_IMAGE}-${USER}.local
+LOCAL_DOCKER_IMAGE := ${PJT_DOCKER_IMAGE}.local
 
 ifeq (, $(shell lsmod | grep nvidia))
 	NVIDIA_ENV := 0
@@ -99,14 +102,14 @@ all: setup clean docker local
 clean:
 	docker system prune
 
+	@(if docker images --format "{{.Repository}}:{{.Tag}}" | grep "${LOCAL_DOCKER_IMAGE}"; then \
+			echo "Removing local docker image ${LOCAL_DOCKER_IMAGE}"; \
+			docker image rm ${LOCAL_DOCKER_IMAGE}; \
+	fi)
+
 	@(if docker images --format "{{.Repository}}:{{.Tag}}" | grep "${PJT_DOCKER_IMAGE}"; then \
 	    echo "Removing project docker image ${PJT_DOCKER_IMAGE}"; \
 	    docker image rm ${PJT_DOCKER_IMAGE}; \
-	fi)
-
-	@(if docker images --format "{{.Repository}}:{{.Tag}}" | grep "${LOCAL_DOCKER_IMAGE}"; then \
-	    echo "Removing local docker image ${LOCAL_DOCKER_IMAGE}"; \
-	    docker image rm ${LOCAL_DOCKER_IMAGE}; \
 	fi)
 
 setup:
@@ -116,18 +119,19 @@ setup:
 
 docker: setup
 	echo "Building project docker image ${PJT_DOCKER_IMAGE}"; \
-	docker build ${XP_TARGET_DIR}/docker -t ${PJT_DOCKER_IMAGE} --build-arg DOCKER_SRC=${DOCKER_SRC} ${BUILD_ARGS} --no-cache;
+	docker build ${XP_TARGET_DIR}/docker -t ${PJT_DOCKER_IMAGE} --build-arg DOCKER_SRC=${DOCKER_SRC} ${BUILD_ARGS};
 
 local:
-	echo "Pulling docker image ${PJT_DOCKER_IMAGE} and building local docker image ${LOCAL_DOCKER_IMAGE}, USER: ${USER}, LOCAL_UID: ${LOCAL_USER_ID}, GROUP_AUDIO: ${GROUP_AUDIO}, GROUP_VIDEO: ${GROUP_VIDEO}, GROUP_INPUT: ${GROUP_INPUT}";
+	echo "Pulling docker image ${PJT_DOCKER_IMAGE} and building local docker image ${LOCAL_DOCKER_IMAGE}, USER: ${DOCKER_USERNAME}, LOCAL_UID: ${LOCAL_USER_ID}, GROUP_AUDIO: ${GROUP_AUDIO}, GROUP_VIDEO: ${GROUP_VIDEO}, GROUP_INPUT: ${GROUP_INPUT}";
 	docker build ${XP_SCRIPT_DIR} \
 			-t ${LOCAL_DOCKER_IMAGE} \
-			--build-arg USER=${USER} \
+			--build-arg USER=${DOCKER_USERNAME} \
 			--build-arg DOCKER_SRC=${PJT_DOCKER_IMAGE} \
 			--build-arg LOCAL_USER_ID=${LOCAL_USER_ID} \
 			--build-arg GROUP_AUDIO=${GROUP_AUDIO} \
 			--build-arg GROUP_VIDEO=${GROUP_VIDEO} \
-			--build-arg GROUP_INPUT=${GROUP_INPUT} --no-cache;
+			--build-arg GROUP_INPUT=${GROUP_INPUT} \
+			--build-arg WORKDIR=${WORKDIR};
 
 distro: docker
 	@echo "Pushing docker image ${PJT_DOCKER_IMAGE} on ${DOCKER_DOMAIN}"
