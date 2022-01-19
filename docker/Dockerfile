@@ -40,3 +40,5 @@ RUN usermod -a -G root,sudo docky
 
 RUN git config --global user.name docky bot && \
     git config --global user.email novalid@mail.com
+
+COPY pulse-client.conf /etc/pulse/client.conf
