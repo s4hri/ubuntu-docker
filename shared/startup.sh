@@ -1,5 +1,3 @@
 #!/bin/bash
-
-echo ">> Executing shell script right after running the docker container ..."
-
+echo ">> Executing script STARTUP ..."
 /bin/bash

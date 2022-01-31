@@ -6,8 +6,8 @@ services:
     image: ${DOCKER_DOMAIN}/${PROJECT_NAME}-docker:${RELEASE}.local
 
     extends:
-      file: .dockyman/compose/common.yml
-      service: common
+      file: ${BASE_SERVICE_FILENAME}
+      service: ${BASE_SERVICE_NAME}
 
     environment:
         - PROJECT_NAME=${PROJECT_NAME}
