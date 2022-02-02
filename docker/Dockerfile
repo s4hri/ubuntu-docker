@@ -31,7 +31,7 @@ RUN apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-tools \
     gstreamer1.0-plugins-ugly pulseaudio-utils libdlib-dev libsqlite3-dev \
-    libftdi1 libusb-1.0-0-dev terminator telnet gnome-terminal protobuf-compiler sudo;
+    libftdi1 libusb-1.0-0-dev terminator telnet gnome-terminal protobuf-compiler sudo nano;
 
 RUN apt-get install -y \
     curl \
@@ -44,9 +44,6 @@ RUN apt-get install -y \
 RUN useradd -ms /bin/bash docky
 RUN passwd -d docky
 RUN usermod -a -G root,sudo docky
-
-RUN git config --global user.name docky bot && \
-    git config --global user.email novalid@mail.com
 
 COPY pulse-client.conf /etc/pulse/client.conf
 
@@ -65,6 +62,11 @@ RUN usermod -aG docker docky
 
 USER docky
 COPY ./vscode_extensions $HOME
-RUN cat extensions | xargs -L1 code --install-extension
+RUN cat ./vscode_extensions | xargs -L1 code --install-extension
 RUN mkdir -p ${HOME}/.local && mkdir -p ${HOME}/.config
 RUN mkdir ${HOME}/.config/terminator && touch ${HOME}/.config/terminator/config
+
+RUN git config --global user.name docky bot && \
+    git config --global user.email novalid@mail.com
+
+USER root

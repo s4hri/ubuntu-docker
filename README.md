@@ -2,8 +2,7 @@
 
 # 1. Quick run
 
-    cd ubuntu-docker
-    .dockyman/run.sh
+    bash go
 
 # 2. How to build the container
 
