@@ -11,6 +11,7 @@ ARG GROUP_AUDIO
 ARG GROUP_VIDEO
 ARG GROUP_INPUT
 ARG WORKDIR
+ARG XDG_RUNTIME_DIR
 
 USER root
 
@@ -20,7 +21,7 @@ ENV GROUP_INPUT=${GROUP_INPUT}
 ENV GROUP_VIDEO=${GROUP_VIDEO}
 ENV GROUP_AUDIO=${GROUP_AUDIO}
 ENV WORKDIR=${WORKDIR}
-
+ENV XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
 
 RUN if [ $(getent group audio) ]; then groupmod -o audio --gid ${GROUP_AUDIO}; else groupadd audio --gid ${GROUP_AUDIO}; fi
 RUN if [ $(getent group video) ]; then groupmod -o video --gid ${GROUP_VIDEO}; else groupadd video --gid ${GROUP_VIDEO}; fi
@@ -39,5 +40,6 @@ RUN usermod -a -G root,sudo,${GROUP_AUDIO},${GROUP_VIDEO},${GROUP_INPUT} "$(gete
 WORKDIR ${WORKDIR}
 
 ENV PATH=${PATH}:~/.local/bin:${WORKDIR}
+RUN mkdir ${XDG_RUNTIME_DIR}
+RUN chown ${LOCAL_USER_ID}:${LOCAL_USER_ID} ${XDG_RUNTIME_DIR}
 USER ${LOCAL_USER_ID}
-RUN mkdir -p ${HOME}/.local && mkdir -p ${HOME}/.config

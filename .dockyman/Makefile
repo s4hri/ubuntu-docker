@@ -123,7 +123,8 @@ local:
 			--build-arg GROUP_AUDIO=${GROUP_AUDIO} \
 			--build-arg GROUP_VIDEO=${GROUP_VIDEO} \
 			--build-arg GROUP_INPUT=${GROUP_INPUT} \
-			--build-arg WORKDIR=${WORKDIR};
+			--build-arg WORKDIR=${WORKDIR} \
+			--build-arg XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR};
 
 distro: docker
 	@echo "Pushing docker image ${PJT_DOCKER_IMAGE} on ${DOCKER_DOMAIN}"

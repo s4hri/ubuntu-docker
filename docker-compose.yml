@@ -13,4 +13,4 @@ services:
         - PROJECT_NAME=${PROJECT_NAME}
         - RELEASE=${RELEASE}
 
-    command: ["/bin/bash", "-c", "${WORKDIR}/shared/startup.sh"]
+    command: ["/bin/bash", "-c", "terminator & ${WORKDIR}/shared/startup.sh"]
