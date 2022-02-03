@@ -47,6 +47,9 @@ RUN usermod -a -G root,sudo docky
 
 COPY pulse-client.conf /etc/pulse/client.conf
 
+RUN git config --global user.name root bot && \
+    git config --global user.email novalid@mail.com
+
 RUN wget ${VSCODE_URL} -O vscode.deb
 RUN apt-get install -y ./vscode.deb
 RUN rm vscode.deb
