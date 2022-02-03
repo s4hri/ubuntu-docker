@@ -26,12 +26,12 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-     - name: Build and Push 
+     - name: Build and Push
        run: |
             git pull origin master
             git checkout master
             sed -i -r 's/^(RELEASE=).*/\1${{ steps.tag.outputs.tag }}/' .env
-            bash .dockyman/build.sh
+            bash .dockyman/build.sh docker
             bash .dockyman/build.sh distro
        env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
