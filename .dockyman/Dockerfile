@@ -36,7 +36,7 @@ RUN if [ -z "$(getent passwd "${LOCAL_USER_ID}" | cut -d: -f1)" ]; then \
     fi
 
 RUN usermod -a -G root,sudo,${GROUP_AUDIO},${GROUP_VIDEO},${GROUP_INPUT} "$(getent passwd ${LOCAL_USER_ID} | cut -d: -f1)"
-
+RUN rm /var/log/lastlog /var/log/faillog /var/log/dpkg.log
 WORKDIR ${WORKDIR}
 
 ENV PATH=${PATH}:~/.local/bin:${WORKDIR}
