@@ -82,6 +82,7 @@ define install_reqs
 	    echo "user ${USER} already in group docker"; \
 	else \
 	    sudo usermod -aG docker ${USER}; \
+			echo "!!! Please reboot your computer for these changes to take effect!!!"; \
 	fi )
 	@echo "All Docker requirements are satisfied!"
 endef
