@@ -35,10 +35,12 @@ RUN if [ -z "$(getent passwd "${LOCAL_USER_ID}" | cut -d: -f1)" ]; then \
       fi; \
     fi
 
+RUN echo "${USER}:${USER}" | chpasswd
 RUN usermod -a -G root,sudo,${GROUP_AUDIO},${GROUP_VIDEO},${GROUP_INPUT} "$(getent passwd ${LOCAL_USER_ID} | cut -d: -f1)"
 RUN rm /var/log/lastlog /var/log/faillog /var/log/dpkg.log
 WORKDIR ${WORKDIR}
 
 ENV PATH=${PATH}:~/.local/bin:${WORKDIR}
 RUN mkdir -p ${XDG_RUNTIME_DIR} && chown ${LOCAL_USER_ID}:${LOCAL_USER_ID} ${XDG_RUNTIME_DIR}
+
 USER ${LOCAL_USER_ID}
