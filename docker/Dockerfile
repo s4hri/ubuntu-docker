@@ -5,7 +5,6 @@ LABEL maintainer="Davide De Tommaso <davide.detommaso@iit.it>"
 
 ENV TZ=Europe/Rome
 ENV DEBIAN_FRONTEND noninteractive
-ENV VSCODE_URL https://go.microsoft.com/fwlink/?LinkID=760868
 
 USER root
 
@@ -41,15 +40,7 @@ RUN apt-get install -y \
     gnupg \
     lsb-release;
 
-RUN useradd -ms /bin/bash docky
-RUN passwd -d docky
-RUN usermod -a -G root,sudo docky
-
 COPY pulse-client.conf /etc/pulse/client.conf
-
-RUN wget ${VSCODE_URL} -O vscode.deb
-RUN apt-get install -y ./vscode.deb
-RUN rm vscode.deb
 
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 RUN echo \
@@ -58,12 +49,3 @@ RUN echo \
 
 RUN apt-get update
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io
-RUN usermod -aG docker docky
-
-USER docky
-COPY ./vscode_extensions $HOME
-RUN cat ./vscode_extensions | xargs -L1 code --install-extension
-RUN mkdir -p ${HOME}/.local && mkdir -p ${HOME}/.config
-RUN mkdir ${HOME}/.config/terminator && touch ${HOME}/.config/terminator/config
-
-USER root
