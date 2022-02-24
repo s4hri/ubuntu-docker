@@ -1,4 +1,4 @@
-# robotology superbuild docker
+# ubuntu docker
 
 # 1. Quick run
 
