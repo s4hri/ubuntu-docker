@@ -45,7 +45,7 @@ local()
 distro()
 {
   echo "Pushing docker image ${PJT_DOCKER_IMAGE} ..."
-  docker-compose --profile base push
+  docker-compose -f ${XP_TARGET_DIR}/docker-compose.yml push
 }
 
 
