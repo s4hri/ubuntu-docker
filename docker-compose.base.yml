@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2022 Social Cognition in Human-Robot Interaction
 #                    Author: Davide De Tommaso (davide.detommaso@iit.it)
-#                    Project: Dockyman Template
+#                    Project: Dockyman
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,16 +26,10 @@ version: '3.8'
 
 services:
 
-  common:
+  ubuntu.base:
+    image: ${PJT_DOCKER_IMAGE}
 
-    extends:
-      file: common.yml
-      service: common
-
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [graphics,utility]
+    build:
+      context: docker
+      args:
+        DOCKER_SRC: ${DOCKER_SRC}

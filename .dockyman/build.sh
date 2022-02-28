@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2022 Social Cognition in Human-Robot Interaction
 #                    Author: Davide De Tommaso (davide.detommaso@iit.it)
-#                    Project: Dockyman
+#                    Project: Dockyman Template
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,13 +33,13 @@ source ${XP_SCRIPT_DIR}/setup.sh
 docker()
 {
   echo "Building project docker image ${PJT_DOCKER_IMAGE}"
-  docker-compose --profile base -f ${XP_TARGET_DIR}/docker-compose.yml build $1
+  docker-compose -f ${XP_TARGET_DIR}/docker-compose.base.yml build $1
 }
 
 local()
 {
   echo "Pulling docker image ${PJT_DOCKER_IMAGE} and building local docker image ${LOCAL_DOCKER_IMAGE}, USERNAME: ${USERNAME}, LOCAL_UID: ${LOCAL_USER_ID}, GROUP_AUDIO: ${GROUP_AUDIO}, GROUP_VIDEO: ${GROUP_VIDEO}, GROUP_INPUT: ${GROUP_INPUT}"
-  docker-compose --profile local -f ${XP_TARGET_DIR}/docker-compose.yml build $1
+  docker-compose -f ${XP_TARGET_DIR}/docker-compose.yml build $1
 }
 
 distro()

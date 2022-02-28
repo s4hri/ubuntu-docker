@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2022 Social Cognition in Human-Robot Interaction
 #                    Author: Davide De Tommaso (davide.detommaso@iit.it)
-#                    Project: Dockyman
+#                    Project: Dockyman Template
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,14 +30,11 @@ export XP_TARGET_DIR=${CURRENT_DIR}/..
 
 source ${XP_SCRIPT_DIR}/setup.sh
 
-export BASE_SERVICE_NAME=local
-
 if [[ $(lsmod | grep nvidia) ]]; then
   export BASE_SERVICE_FILENAME=${XP_TARGET_DIR}/.dockyman/compose/nvidia.yml
 else
-  export BASE_SERVICE_FILENAME=${XP_TARGET_DIR}/.dockyman/compose/local.yml
+  export BASE_SERVICE_FILENAME=${XP_TARGET_DIR}/.dockyman/compose/common.yml
 fi
 
-bash ${XP_SCRIPT_DIR}/build.sh
-docker-compose --profile local -f ${XP_TARGET_DIR}/docker-compose.yml up
-docker-compose --profile local -f ${XP_TARGET_DIR}/docker-compose.yml down --remove-orphans
+docker-compose -f ${XP_TARGET_DIR}/docker-compose.yml $@ up
+docker-compose -f ${XP_TARGET_DIR}/docker-compose.yml $@ down --remove-orphans

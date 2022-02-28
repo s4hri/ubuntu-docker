@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2022 Social Cognition in Human-Robot Interaction
 #                    Author: Davide De Tommaso (davide.detommaso@iit.it)
-#                    Project: Dockyman
+#                    Project: Dockyman Template
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -71,5 +71,3 @@ ENV PATH=${PATH}:~/.local/bin:${WORKDIR}
 RUN mkdir -p ${XDG_RUNTIME_DIR} && chown ${LOCAL_USER_ID}:${LOCAL_USER_ID} ${XDG_RUNTIME_DIR}
 
 USER ${LOCAL_USER_ID}
-ENV XDG_CONFIG_HOME ${HOME}/.config
-RUN mkdir -p ${HOME}/.config

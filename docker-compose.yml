@@ -28,10 +28,16 @@ services:
 
   ubuntu:
     image: ${PJT_DOCKER_IMAGE}.local
-    profiles: ["local"]
 
     build:
+      context: .dockyman
       args:
+        LOCAL_USER_ID: ${LOCAL_USER_ID}
+        LOCAL_GROUP_ID: ${LOCAL_GROUP_ID}
+        GROUP_AUDIO: ${GROUP_AUDIO}
+        GROUP_VIDEO: ${GROUP_VIDEO}
+        GROUP_INPUT: ${GROUP_INPUT}
+        XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
         DOCKER_SRC: ${PJT_DOCKER_IMAGE}
         USERNAME: ${USERNAME}
 
@@ -49,12 +55,3 @@ services:
       - type: bind
         source: ./shared
         target: /home/${USERNAME}/shared
-
-  ubuntu.base:
-    image: ${PJT_DOCKER_IMAGE}
-    profiles: ["base"]
-
-    build:
-      context: docker
-      args:
-        DOCKER_SRC: ${DOCKER_SRC}
