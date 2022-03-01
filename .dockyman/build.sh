@@ -61,6 +61,8 @@ done
 
 if [ "$1" = "--no-cache" ]
 then
+  docker-compose -f ${XP_TARGET_DIR}/docker-compose.base.yml down -v --remove-orphans --rmi all 
+  docker-compose -f ${XP_TARGET_DIR}/docker-compose.yml down -v --remove-orphans --rmi all
   docker $NO_CACHE
   local $NO_CACHE
 else
