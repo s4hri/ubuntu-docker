@@ -13,9 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+     - name: Extract branch name
+       shell: bash
+       run: echo "##[set-output name=branch;]$(echo ${{ github.event.release.target_commitish }})"
+       id: extract_branch
+
      - name: Tag name
        id: tag
-       run: echo "::set-output name=tag::$(date +'v%Y.%m')"
+       run: echo "::set-output name=tag::${{ steps.extract_branch.outputs.branch }}-$(date +'v%Y.%m')"
 
      - name: Create Tag
        uses: actions/github-script@v6
