@@ -26,32 +26,11 @@ version: '3.8'
 
 services:
 
-  ubuntu:
+  main:
     image: ${PJT_DOCKER_IMAGE}.local
 
-    build:
-      context: .dockyman
-      args:
-        LOCAL_USER_ID: ${LOCAL_USER_ID}
-        LOCAL_GROUP_ID: ${LOCAL_GROUP_ID}
-        GROUP_AUDIO: ${GROUP_AUDIO}
-        GROUP_VIDEO: ${GROUP_VIDEO}
-        GROUP_INPUT: ${GROUP_INPUT}
-        XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
-        DOCKER_SRC: ${PJT_DOCKER_IMAGE}
-        USERNAME: ${USERNAME}
+    command: ["/bin/bash", "-c", "terminator"]
 
     extends:
-      file: ${BASE_SERVICE_FILENAME}
-      service: ${BASE_SERVICE_NAME}
-
-    environment:
-        - PROJECT_NAME=${PROJECT_NAME}
-        - RELEASE=${RELEASE}
-
-    command: ["/bin/bash", "-c", "terminator & ~/shared/startup.sh"]
-
-    volumes:
-      - type: bind
-        source: ./shared
-        target: /home/${USERNAME}/shared
+      file: .dockyman/profiles/local.yml
+      service: local

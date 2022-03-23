@@ -35,12 +35,14 @@ LOCAL_GROUP_ID=$(id -g)
 GROUP_AUDIO=$(getent group audio | cut -d: -f3)
 GROUP_VIDEO=$(getent group video | cut -d: -f3)
 GROUP_INPUT=$(getent group input | cut -d: -f3)
+GROUP_DIALOUT=$(getent group dialout | cut -d: -f3)
 
 export LOCAL_USER_ID
 export LOCAL_GROUP_ID
 export GROUP_AUDIO
 export GROUP_VIDEO
 export GROUP_INPUT
+export GROUP_DIALOUT
 export PJT_DOCKER_IMAGE
 
 

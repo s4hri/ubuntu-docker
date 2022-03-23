@@ -35,6 +35,7 @@ ARG LOCAL_GROUP_ID
 ARG GROUP_AUDIO
 ARG GROUP_VIDEO
 ARG GROUP_INPUT
+ARG GROUP_DIALOUT
 ARG XDG_RUNTIME_DIR
 
 USER root
@@ -45,12 +46,15 @@ ENV LOCAL_GROUP_ID=${LOCAL_GROUP_ID}
 ENV GROUP_INPUT=${GROUP_INPUT}
 ENV GROUP_VIDEO=${GROUP_VIDEO}
 ENV GROUP_AUDIO=${GROUP_AUDIO}
+ENV GROUP_DIALOUT=${GROUP_DIALOUT}
+
 ENV WORKDIR=/home/${USERNAME}
 ENV XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
 
 RUN if [ $(getent group audio) ]; then groupmod -o audio --gid ${GROUP_AUDIO}; else groupadd audio --gid ${GROUP_AUDIO}; fi
 RUN if [ $(getent group video) ]; then groupmod -o video --gid ${GROUP_VIDEO}; else groupadd video --gid ${GROUP_VIDEO}; fi
 RUN if [ $(getent group input) ]; then groupmod -o input --gid ${GROUP_INPUT}; else groupadd input --gid ${GROUP_INPUT}; fi
+RUN if [ $(getent group dialout) ]; then groupmod -o dialout --gid ${GROUP_DIALOUT}; else groupadd dialout --gid ${GROUP_DIALOUT}; fi
 
 RUN if [ -z "$(getent passwd "${LOCAL_USER_ID}" | cut -d: -f1)" ]; then \
       if [ $(getent passwd ${USERNAME}) ]; then \
@@ -61,7 +65,7 @@ RUN if [ -z "$(getent passwd "${LOCAL_USER_ID}" | cut -d: -f1)" ]; then \
     fi
 
 RUN echo "${USERNAME}:${USERNAME}" | chpasswd
-RUN usermod -a -G root,sudo,${GROUP_AUDIO},${GROUP_VIDEO},${GROUP_INPUT} "$(getent passwd ${LOCAL_USER_ID} | cut -d: -f1)"
+RUN usermod -a -G root,sudo,${GROUP_AUDIO},${GROUP_VIDEO},${GROUP_INPUT},${GROUP_DIALOUT} "$(getent passwd ${LOCAL_USER_ID} | cut -d: -f1)"
 RUN chown -R ${LOCAL_USER_ID}:${LOCAL_USER_ID} ${WORKDIR}
 
 RUN rm /var/log/lastlog /var/log/faillog /var/log/dpkg.log

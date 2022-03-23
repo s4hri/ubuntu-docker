@@ -1,0 +1,36 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Create Monthly Tag/Release
+
+on:
+  schedule:
+    - cron:  '0 0 1 * *'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+     - name: Tag name
+       id: tag
+       run: echo "::set-output name=tag::$(date +'v%Y.%m')"
+
+     - name: Create Tag
+       uses: actions/github-script@v6
+       with:
+        script: |
+                github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: 'refs/tags/${{ steps.tag.outputs.tag }}',
+                sha: context.sha
+                })
+
+     - name: Create Release
+       uses: ncipollo/release-action@v1
+       with:
+          tag: ${{ steps.tag.outputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: ${{ steps.tag.outputs.tag }}
