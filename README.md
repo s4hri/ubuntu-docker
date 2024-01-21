@@ -7,4 +7,4 @@
 # 2. How to build the container
 
     cd ubuntu-docker
-    .dockyman/build.sh
+    bash .dockyman/build.sh

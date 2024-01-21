@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2022 Social Cognition in Human-Robot Interaction
+# Copyright (c) 2023 Istituto Italiano di Tecnologia (IIT)
 #                    Author: Davide De Tommaso (davide.detommaso@iit.it)
 #                    Project: Dockyman
 #
@@ -26,10 +26,18 @@ version: '3.8'
 
 services:
 
-  main.base:
-    image: ${PJT_DOCKER_IMAGE}
+  nvidia-gpu:
+    environment:
+      - GPU_PROFILE=${GPU_PROFILE:?err}
 
-    build:
-      context: docker
-      args:
-        DOCKER_SRC: ${DOCKER_SRC}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [utility, compute, graphics]
+
+  no-gpu:
+    environment:
+      - GPU_PROFILE=${GPU_PROFILE:?err}

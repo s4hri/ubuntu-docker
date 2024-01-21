@@ -1,11 +1,10 @@
+# Original image stage
 ARG DOCKER_SRC
+FROM ${DOCKER_SRC}
 
-FROM $DOCKER_SRC
-LABEL maintainer="Davide De Tommaso <davide.detommaso@iit.it>"
+LABEL version="base"
 
-ENV TZ=Europe/Rome
 ENV DEBIAN_FRONTEND noninteractive
-
 USER root
 
 RUN apt-get update
