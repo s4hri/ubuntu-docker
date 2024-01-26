@@ -5,8 +5,4 @@
 			"args": { "DOCKER_SRC": "${localEnv:DOCKER_SRC}" }
 	}
 
-	//"features": {
-	//	"ghcr.io/devcontainers/features/go:1": {}
-	//}
-	  
 }

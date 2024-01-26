@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   main:
-    image: ${BASE_NAME:?err}.local
+    image: ${PJT_DOCKER_NAME:?err}.local
 
     extends:
       file: .dockyman/profiles/local.yaml
