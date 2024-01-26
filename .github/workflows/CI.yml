@@ -4,21 +4,70 @@ on:
   release:
     types:
       - created
+
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-         
+        uses: actions/checkout@v4
+
       - name: Build and push Docker image
+        id: build-and-push
         run: |
           make -C .dockyman dev
           make -C .dockyman build
           DOCKERHUBUSERNAME=$DOCKER_USERNAME DOCKERHUBPASSWORD=$DOCKER_PASSWORD make -C .dockyman push
-          
+          image_link="https://github.com/$GITHUB_REPOSITORY/releases/tag/$GITHUB_REF"
+          echo "GitHub Release URL: $image_link"
+          echo "IMAGE_LINK=$image_link" >> $GITHUB_ENV
+
+      - name: Source build.env
+        if: ${{ success() }}
+        run: |
+          source build.env
+          echo "The PJT_DOCKER_NAME is $PJT_DOCKER_NAME"
+          echo "DOCKER_NAME=$PJT_DOCKER_NAME" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "IMAGE_NAME=$(echo $PJT_DOCKER_NAME | cut -d '/' -f 2 | cut -d ':' -f 1)" >> $GITHUB_ENV
+
+
+      - name: Checkout private tools
+        if: ${{ success() }}
+        uses: actions/checkout@v4
+        with:
+          repository: s4hri/s4hri-docker-images
+          token: ${{ secrets.S4HRI_PAT }}
+
+      - name: Update README
+        if: ${{ success() }}
+        run: |
+          # Add new entry
+          NEW_ENTRY="- [$DOCKER_NAME]($IMAGE_LINK)"
+          file="README.md"
+          image_name=$NEW_ENTRY
+          if ! grep -qF "${image_name:2}" "$file"; then
+            # Add the package in alphabetical order after the first two rows
+            awk -v image="$image_name" 'BEGIN { added=0 } NR <= 5 { print $0; next } { if (tolower(image) <= tolower($1) && !added) { print image; added=1 } print $0 } END { if (!added) print image; }' "$file" > tmpfile && mv tmpfile "$file"
+            awk 'NR <= 5 { print } NR > 5 { print | "sort" }' "$file" > tmpfile && mv tmpfile "$file"
+            echo "'$image_name' added."
+          else
+            echo "'$image_name' already exists."
+          fi
+
+      - name: Create Pull Request
+        if: ${{ success() }}
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.S4HRI_PAT }}
+          branch: ${{ env.IMAGE_NAME }}.${{ env.VERSION }}
+          commit-message: "Update README with ${{ env.IMAGE_NAME }}.${{ env.VERSION }}"
+          title: "Update README with ${{ env.IMAGE_NAME }}.${{ env.VERSION }}"
+          body: "This PR updates the ${{ env.IMAGE_NAME }}.${{ env.VERSION }} entry in README."
+          base: master
